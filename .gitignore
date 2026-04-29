@@ -1,0 +1,20 @@
+/.doc-review/
+
+# SGX build artifacts
+sgx/quote-generator
+sgx/enclave.so
+sgx/enclave.signed.so
+sgx/*.o
+sgx/Enclave_u.c
+sgx/Enclave_u.h
+sgx/Enclave_t.c
+sgx/Enclave_t.h
+sgx/*.pem
+
+# TDX build artifacts
+tdx/tdx-quote-generator-linux
+
+# General
+*.so
+*.bin
+*.out

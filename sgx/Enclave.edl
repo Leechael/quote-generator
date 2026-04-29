@@ -1,0 +1,11 @@
+enclave {
+    include "sgx_report.h"
+
+    trusted {
+        public sgx_status_t ecall_get_report(
+            [in] const sgx_target_info_t* target_info,
+            [in] const sgx_report_data_t* report_data,
+            [out] sgx_report_t* report
+        );
+    };
+};
