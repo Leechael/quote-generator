@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"syscall"
+	"time"
 	"unsafe"
 )
 
@@ -71,7 +72,7 @@ func main() {
 	}
 
 	if useDeviceIDReportData || printPPID || printDeviceID {
-		probeQuote, err := getQuote(uint32(qgsPort), reportData)
+		probeQuote, err := timedGetQuote("quote_probe", uint32(qgsPort), reportData)
 		if err != nil {
 			fatal(fmt.Errorf("generate probe quote: %w", err))
 		}
@@ -91,7 +92,7 @@ func main() {
 		}
 	}
 
-	quote, err := getQuote(uint32(qgsPort), reportData)
+	quote, err := timedGetQuote("quote", uint32(qgsPort), reportData)
 	if err != nil {
 		fatal(err)
 	}
@@ -100,11 +101,28 @@ func main() {
 		fatal(fmt.Errorf("write %s: %w", outFile, err))
 	}
 	fmt.Printf("wrote %s (%d bytes)\n", outFile, len(quote))
+	summary("quote_result=ok quote_len=%d", len(quote))
 }
 
 func fatal(err error) {
 	fmt.Fprintf(os.Stderr, "error: %v\n", err)
+	summary("quote_result=fail")
 	os.Exit(1)
+}
+
+func summary(format string, args ...any) {
+	fmt.Printf("SUMMARY "+format+"\n", args...)
+}
+
+func timedGetQuote(label string, port uint32, reportData [reportDataSize]byte) ([]byte, error) {
+	start := time.Now()
+	quote, err := getQuote(port, reportData)
+	elapsed := time.Since(start)
+	summary("%s_ms=%d", label, elapsed.Milliseconds())
+	if err == nil {
+		summary("%s_len=%d", label, len(quote))
+	}
+	return quote, err
 }
 
 func parseReportData(s string) ([reportDataSize]byte, error) {

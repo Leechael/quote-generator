@@ -68,3 +68,17 @@ tool then generates the final quote with `-device-id-report-data`.
 
 The tool writes the raw binary quote to the selected output file. The quote can
 be verified or parsed with DCAP/QVL tooling outside this binary.
+
+For benchmark harnesses, the tool also emits machine-readable `SUMMARY` lines
+on stdout without changing the quote contents:
+
+```text
+SUMMARY quote_probe_ms=...
+SUMMARY quote_probe_len=...
+SUMMARY quote_ms=...
+SUMMARY quote_len=...
+SUMMARY quote_result=ok quote_len=...
+```
+
+`quote_probe_*` is printed only when `-device-id-report-data`, `-print-ppid`, or
+`-print-device-id` requires a probe quote.

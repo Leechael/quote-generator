@@ -40,6 +40,8 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o tdx-quote-generator-linux .
 
 It must run inside a TDX guest with `/dev/tdx_guest`. The QGS vsock port must
 be passed with `-qgs-port`.
+The binary emits `SUMMARY quote_ms=...`, `SUMMARY quote_len=...`, and
+`SUMMARY quote_result=...` lines for benchmark harnesses.
 
 Examples:
 
